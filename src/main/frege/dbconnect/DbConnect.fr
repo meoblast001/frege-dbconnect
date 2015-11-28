@@ -1,0 +1,18 @@
+-- |
+-- Module: info.meoblast001.dbconnect.DbConnect
+-- Copyright: (C) 2015 Braden Walters
+-- License: MIT (see LICENSE file)
+-- Maintainer: Braden Walters <vc@braden-walters.info>
+module info.meoblast001.dbconnect.DbConnect where
+
+import info.meoblast001.dbconnect.Internal.JDBC
+
+withDatabase :: String -> IO (Bool)
+withDatabase connStr =
+  try doWithDatabase connStr `catch` handleSqlException
+  where
+    doWithDatabase connStr = do
+      connection <- DriverManager.getConnection connStr
+      _ <- connection.close
+      return true
+    handleSqlException (sqle :: SQLException) = return false
